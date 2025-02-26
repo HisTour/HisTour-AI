@@ -13,11 +13,9 @@ async def service(request: schemas.AssignRequest):
     vector_db_path = str(src_root / "database" / "vector_db")
 
     transformed_dto = Preprocessor.transform(request)
-    print(transformed_dto)
 
     hash_id = await Scheduler.scheduling(transformed_dto)
     url = f"http://{BASE_URL}/api/v1/sse?hash={hash_id}"
-    await Scheduler.close()
     return url
 
 
@@ -37,8 +35,6 @@ async def main():
     # 서비스 실행 및 hash_id 출력
     hash_id = await service(request)
     print(f"Hash ID: {hash_id}")
-
-    await Scheduler.close()
 
 
 if __name__ == "__main__":

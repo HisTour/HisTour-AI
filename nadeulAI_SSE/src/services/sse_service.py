@@ -2,6 +2,11 @@ import asyncio
 import redis.asyncio as aioredis
 import logging
 import json
+import grpc
+from pathlib import Path
+from fastapi import HTTPException
+from httpx import AsyncClient, TimeoutException
+
 from nadeulAI_SSE.src import schemas
 from nadeulAI_SSE.src.constants.signals import START_SIGNAL
 from nadeulAI_SSE.src.confidential.constants import (
@@ -9,9 +14,7 @@ from nadeulAI_SSE.src.confidential.constants import (
     REDIS_PORT,
     AI_SERVER_BASE_URL,
 )
-from pathlib import Path
-from fastapi import HTTPException
-from httpx import AsyncClient, TimeoutException
+from nadeulAI_SSE.src.proto import llm_pb2, llm_pb2_grpc
 
 
 async def service(hash: str):
@@ -36,48 +39,45 @@ async def service(hash: str):
     asyncio.create_task(r_lb.set(f"ai_server_is_busy_{machine_idx}", 1, ex=40))
 
     try:
-        async with AsyncClient(
-            base_url=AI_SERVER_BASE_URL.format(str(machine_idx))
-        ) as async_client:
-            async with async_client.stream(
-                "POST",
-                "/",
-                json={**assigned_transformed_dto.model_dump()},
-                timeout=4000,
-            ) as response:
-                result_text = ""
-                is_first = True
+        channel = grpc.aio.insecure_channel(AI_SERVER_BASE_URL.format(str(machine_idx)))
+        stub = llm_pb2_grpc.LLMServiceStub(channel)
 
-                async for chunk in response.aiter_text():
-                    if is_first:
-                        yield START_SIGNAL
-                        is_first = False
-                    result_text += chunk.replace("'", "").replace('"', "")
-                    result_text.replace("[말투반영]", "")
-                    model_output = schemas.Signal(
-                        type="model_output",
-                        contents=result_text,
-                        verbose="질문에 대한 모델 출력입니다.",
-                    )
+        request = llm_pb2.GenerateRequest(
+            qa=assigned_transformed_dto.QA,
+            rag_results=assigned_transformed_dto.rag_results,
+            top_k=assigned_transformed_dto.top_k,
+            character_type=assigned_transformed_dto.character_type,
+        )
 
-                    yield model_output
+        is_first = True
+        print(request)
+        async for response in stub.GenerateStream(request):
+            if is_first:
+                yield START_SIGNAL
+                is_first = False
 
-                if is_first:
-                    yield "No Response"
+            result_text = response.text.replace("'", "").replace('"', "")
+            result_text = result_text.replace("[말투반영]", "")
 
-    except TimeoutException:
-        print("timeout exception")
-        yield "No Response"
+            model_output = schemas.Signal(
+                type="model_output",
+                contents=result_text,
+                verbose="질문에 대한 모델 출력입니다.",
+            )
 
-    except HTTPException as e:
-        print("http exception: ", e)
+            yield model_output
+
+    except grpc.RpcError as e:
+        print("gRPC 에러:", e)
         yield "No Response"
 
     except Exception as e:
-        print("exception: ", e)
+        print("예외 발생:", e)
         yield "No Response"
 
     finally:
         await r_lb.delete(f"ai_server_is_busy_{machine_idx}")
         await r_schedule.close()
         await r_lb.close()
+        if "channel" in locals():
+            await channel.close()
