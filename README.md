@@ -2,6 +2,11 @@
 
 ## AI Server Architecture
 
+# 현재 본 프로젝트는 고도화 작업이 진행 중입니다.
+고도화 작업 완료 후 리드미 변경 예정입니다.
+고도화 작업 관련 이슈
+
+https://github.com/HisTour/HisTour-AI/issues/16
 
 
 <img width="2411" alt="nadeul_ai_diagram" src="https://github.com/user-attachments/assets/f9f2362f-f5da-4b35-bb93-55c43c857bf9">
