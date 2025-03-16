@@ -75,7 +75,7 @@
 - VectorDB는 1차 완성본에서 Proxy 서버 위치에 배치함
 - 상세한 내용은 아래 이슈를 확인해주세요.
   - https://github.com/HisTour/HisTour-AI/issues/18
-  - 
+
 ## ⭐️3. vLLM 적용 및 파라미터 튜닝 : 🔥 Throughput 165배 향상 🔥
 
 ![vllm-logo-text-light](https://github.com/user-attachments/assets/8f541611-8e50-4627-b9ff-e21fa15984a1)
