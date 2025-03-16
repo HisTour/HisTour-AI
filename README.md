@@ -13,7 +13,9 @@
 
 ## How to make
 
-(모델구조 사진)
+<p align="center">
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/13fa176c-1e25-40e0-88ef-3b3af46d69c2" />
+</p>
 
 - 간단한 벤치마크를 돌려본 결과 성능이 제일 준수했던 Qwen2 7B Instruct 모델을 사용했습니다.
 - RAG를 통해 답변에 필요한 정보를 가져와 프롬프트에 추가합니다.
@@ -23,7 +25,10 @@
 
 ## 1차 완성 버전 서빙 방식
 
-(1차 서빙구조 이미지)
+<p align="center">
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/4f50d68b-78c9-479e-b030-38f4a91579b8" />
+</p>
+
 
 - HuggingFace Spaces Zero를 활용해 6개 분산 서버로 서빙
 - Proxy 서버에서 로드밸런싱 및 스트리밍 관련 로직 처리 수행
@@ -32,7 +37,7 @@
 
 # 챗봇 서빙 고도화 프로젝트
 
-전체 계획 관련 이슈: #16
+전체 계획 관련 이슈: #
 
 ## 1. 서빙 환경 고도화를 위한 Observability 확보
 
