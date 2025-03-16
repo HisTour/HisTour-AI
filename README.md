@@ -13,6 +13,7 @@
 
 ## How to make
 
+
 <p align="center">
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/13fa176c-1e25-40e0-88ef-3b3af46d69c2" />
 </p>
@@ -25,13 +26,16 @@
 
 ## 1차 완성 버전 서빙 방식 (HF Zero의 성능 좋지 않음 -> 아래에서 고도화 작업)
 
+<details>
+<summary>모델 구조 그림</summary>
 <p align="center">
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/4f50d68b-78c9-479e-b030-38f4a91579b8" />
 </p>
+</details>
 
 
 - HuggingFace Spaces Zero를 활용해 6개 분산 서버로 서빙
-- Proxy 서버 (위 그림에서 Python Server)에서 로드밸런싱 및 스트리밍 관련 로직 처리 수행
+- Proxy 서버 (위의 모델 구조 그림에서 Python Server)에서 로드밸런싱 및 스트리밍 관련 로직 처리 수행
 - GPU를 필요한 순간에만 대여하는 방식이므로 높은 성능을 내기에는 문제가 있음
 - 실제 프로젝트 제출 시에는 비용 문제로 인해 이 방법으로 서빙을 수행
 
