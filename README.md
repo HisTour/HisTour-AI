@@ -14,7 +14,7 @@
 ## How to make
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/13fa176c-1e25-40e0-88ef-3b3af46d69c2" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/13fa176c-1e25-40e0-88ef-3b3af46d69c2" />
 </p>
 
 - 간단한 벤치마크를 돌려본 결과 성능이 제일 준수했던 Qwen2 7B Instruct 모델을 사용했습니다.
@@ -23,21 +23,21 @@
 - CoT 과정을 통해 생성된 답변을 캐릭터 말투가 입혀진 버전으로 바꾸어 재작성합니다.
 - 미션별 예시 QA 쌍을 활용한 벤치마크를 통해 올바르게 출력되는지 테스트합니다.
 
-## 1차 완성 버전 서빙 방식 (성능 좋지 않음 -> 아래에서 고도화 작업)
+## 1차 완성 버전 서빙 방식 (HF Zero의 성능 좋지 않음 -> 아래에서 고도화 작업)
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/4f50d68b-78c9-479e-b030-38f4a91579b8" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/4f50d68b-78c9-479e-b030-38f4a91579b8" />
 </p>
 
 
 - HuggingFace Spaces Zero를 활용해 6개 분산 서버로 서빙
-- Proxy 서버에서 로드밸런싱 및 스트리밍 관련 로직 처리 수행
+- Proxy 서버 (위 그림에서 Python Server)에서 로드밸런싱 및 스트리밍 관련 로직 처리 수행
 - GPU를 필요한 순간에만 대여하는 방식이므로 높은 성능을 내기에는 문제가 있음
 - 실제 프로젝트 제출 시에는 비용 문제로 인해 이 방법으로 서빙을 수행
 
 # 챗봇 서빙 고도화 프로젝트
 
-전체 계획 관련 이슈: #16
+전체 계획 관련 이슈: https://github.com/HisTour/HisTour-AI/issues/16
 
 ## 1. 서빙 환경 고도화를 위한 Observability 확보
 
@@ -60,6 +60,7 @@
   - Throughput
     - TPS (Tokens Per Second)
 - 상세한 내용은 아래 이슈를 확인해주세요.
+  - https://github.com/HisTour/HisTour-AI/issues/17   
 
 ## 2. RAG 시 VectorDB (ChromaDB) 적용
 
@@ -68,8 +69,12 @@
 - 그래서 ChromaDB를 적용하여 미션 별로 임베딩 벡터로 저장하여 성능을 높이고 유지보수하기 편리하게 함
 - VectorDB는 1차 완성본에서 Proxy 서버 위치에 배치함
 - 상세한 내용은 아래 이슈를 확인해주세요.
+  - https://github.com/HisTour/HisTour-AI/issues/18
+  - 
+## ⭐️3. vLLM 적용 및 파라미터 튜닝 : 🔥 Throughput 165배 향상 🔥
 
-## 3. vLLM 적용 및 파라미터 튜닝 : Throughput 165배 향상
+![vllm-logo-text-light](https://github.com/user-attachments/assets/8f541611-8e50-4627-b9ff-e21fa15984a1)
+
 
 - vLLM은 Paged Attn, Continous Batching을 활용해 LLM 서빙 성능을 극대화함
 - vLLM을 도입하여 TPS 4.8 -> 약 50으로 상승
@@ -78,6 +83,11 @@
 - bf16 -> fp8로 Quantization, 출력 품질은 놀랍게도 큰 차이 없음, TPS 약 600 -> 약 800으로 상승
 - 최종적으로 유효수준 Latency 유지하며 Throughput 165배 향상
 - 상세한 내용은 아래 이슈를 확인해주세요.
+  - https://github.com/HisTour/HisTour-AI/issues/21
+  - https://github.com/HisTour/HisTour-AI/issues/22
+  - https://github.com/HisTour/HisTour-AI/issues/23
+  - https://github.com/HisTour/HisTour-AI/issues/24
+  - https://github.com/HisTour/HisTour-AI/issues/27   
 
 ## 4. gRPC 도입
 
@@ -85,6 +95,7 @@
 - LLM에 대한 Proxy 서버와 LLM 서버 사이에 적용함
 - LLM 작업이 워낙 오래 걸리는 작업이다보니 두드러지게 성능 향상이 있는 것은 아니나 분명히 네트워크 속도를 개선하기에 적용하였음
 - 상세한 내용은 아래 이슈를 확인해주세요.
+  - https://github.com/HisTour/HisTour-AI/issues/25 
 
 # Work In Progress
 
