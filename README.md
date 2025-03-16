@@ -23,7 +23,7 @@
 - CoT 과정을 통해 생성된 답변을 캐릭터 말투가 입혀진 버전으로 바꾸어 재작성합니다.
 - 미션별 예시 QA 쌍을 활용한 벤치마크를 통해 올바르게 출력되는지 테스트합니다.
 
-## 1차 완성 버전 서빙 방식
+## 1차 완성 버전 서빙 방식 (성능 좋지 않음 -> 아래에서 고도화 작업)
 
 <p align="center">
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/4f50d68b-78c9-479e-b030-38f4a91579b8" />
@@ -37,11 +37,13 @@
 
 # 챗봇 서빙 고도화 프로젝트
 
-전체 계획 관련 이슈: #
+전체 계획 관련 이슈: #16
 
 ## 1. 서빙 환경 고도화를 위한 Observability 확보
 
-(Grafana 화면 이미지)
+<p align="center">
+<img width="1060" alt="image" src="https://github.com/user-attachments/assets/bf5715f2-7bfb-4566-bd2b-0069e2e42f1b" />
+</p>
 
 - Prometheous와 Grafana를 활용해 모니터링 환경 구축
 - 지표는 아래와 같이 구성
